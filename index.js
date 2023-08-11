@@ -40,11 +40,11 @@ let getNormalizedData = (coinData) => {
             (multipliers[coinData.market_cap.split(' ')[1]] || 1)).toFixed(0)
     res.market_cap = Number.isNaN(market_cap) ? 0 : market_cap
 
-    // const total_supply =
-    // (Number(coinData.total_supply?.replace(',', '').split(' ')[0].slice(1))
-    //     *
-    //     (multipliers[coinData.total_supply.split(' ')[1]] || 1)).toFixed(0)
-    // res.total_supply = Number.isNaN(total_supply) ? 0 : total_supply
+    const total_supply =
+    (Number(coinData.total_supply?.replace(',', '').split(' ')[0].slice(1))
+        *
+        (multipliers[coinData.total_supply.split(' ')[1]] || 1)).toFixed(0)
+    res.total_supply = Number.isNaN(total_supply) ? 0 : total_supply
     console.log("coinData.total_supply", coinData.total_supply);
 
 
@@ -72,7 +72,8 @@ const getCoinInfo = async ({pageDom, shortCoin, coin, pageNum}) => {
     coinData.full_name = coinPageDom("h1.mr-1.min-w-0.truncate.text-xl.font-bold").text().trim()
     coinData.img = coinPageDom('meta[property="og:image"]').attr('content')
     coinPageDom("div.min-w-0>div.mt-6>dl.font-medium>div").each((i, elem) => {
-        if (i === 5) {
+
+        if (i === 4) {
             coinData.total_supply = coinPageDom(elem).find('div>dd>span').text().trim()
         }
     })
@@ -87,6 +88,7 @@ const getCoinInfo = async ({pageDom, shortCoin, coin, pageNum}) => {
             if (i === 2) {
                 coinData.market_cap = statElDom.find('dd>span').text().trim()
             }
+           
             if (i === 6) {
                 coinData.ath_time = statElDom.find('dt>time').text()
                 coinData.ath_price = statElDom.find('dd>div.mb-1.text-sm').text()
